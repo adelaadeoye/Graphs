@@ -54,18 +54,18 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        q=Stack()
-        q.push(starting_vertex)
+        s=Stack()
+        s.push(starting_vertex)
 
         visited =set()
 
-        while q.size()> 0:
-            v= q.pop()
+        while s.size()> 0:
+            v= s.pop()
             if v not in visited:
                 print(v)
                 visited.add(v)
                 for next_vert in self.get_neighbors(v):
-                    q.push(next_vert)
+                    s.push(next_vert)
 
 
     def dft_recursive(self, starting_vertex):
@@ -118,9 +118,20 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        s=Stack()
+        s.push([starting_vertex])
+        visited= set()
+        while s.size()>0:
+            v=s.pop()
+            last_vertex=v[-1]
+            if last_vertex not in visited:
+                if last_vertex== destination_vertex:
+                    return v
+                visited.add(last_vertex)
+                for vertex in self.vertices[last_vertex]:
+                    s.push([*v,vertex])
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -128,7 +139,17 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if visited == None:
+            visited = set()
+        if not starting_vertex in visited:
+            visited.add(starting_vertex)
+            if starting_vertex == destination_vertex:
+                return [starting_vertex]
+            for vertex in self.vertices[starting_vertex]:
+                vertices = self.dfs_recursive(vertex, destination_vertex, visited)
+                if destination_vertex in vertices:
+                    return [starting_vertex, *vertices]
+        return []
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
